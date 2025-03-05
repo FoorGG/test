@@ -1,0 +1,7 @@
+---
+nfs_share: "192.168.88.41:/nfs_srv/upload"
+nfs_mountpoint: "/share"
+nfs_permissions: '0777'
+nfs_options: 'rw,sync'
+owner: root
+group: root

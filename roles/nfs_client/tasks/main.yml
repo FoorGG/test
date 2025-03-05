@@ -1,0 +1,34 @@
+---
+- name: Install NFS client packages
+  apt:
+    name: nfs-common
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install NFS client packages for RedHat-based systems
+  yum:
+    name: nfs-utils
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure mountpoint exists
+  file:
+    path: "{{ nfs_mountpoint }}"
+    state: directory
+    mode: "{{ nfs_permissions }}"
+    owner: "{{ owner }}"
+    group: "{{ group }}"
+
+- name: Mount NFS network share
+  ansible.posix.mount:
+    src: "{{ nfs_share }}"
+    path: "{{ nfs_mountpoint }}"
+    fstype: nfs
+    opts: "{{ nfs_options }}"
+    state: mounted
+
+- name: Add entry to fstab for persistent mount
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nfs_share }} {{ nfs_mountpoint }} nfs {{ nfs_options }} 0 0"
+    state: present

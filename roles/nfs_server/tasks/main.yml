@@ -1,0 +1,31 @@
+---
+
+- name: Downloading NFS SRV
+  apt:
+    name: nfs-kernel-server
+    state: present
+
+- name: Create directory for sharing
+  file:
+    path: "{{ nfs.share.dir }}"
+    state: directory
+    mode: "{{ nfs.share.mode }}"
+    owner: "{{ nfs.share.owner }}"
+    group: "{{ nfs.share.group }}"
+
+- name: Configure NFS exports
+  lineinfile:
+    path: /etc/exports
+    line: "{{ nfs.export.line }}"
+    state: present
+
+- name: Export NFS directories
+  command: exportfs -a
+  notify: Restart NFS server
+
+- name: Ensure NFS service is running
+  service:
+    name: nfs-kernel-server
+    state: started
+
+...

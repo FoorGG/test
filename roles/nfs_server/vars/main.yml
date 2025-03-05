@@ -1,0 +1,12 @@
+---
+
+nfs:
+  share:
+    dir: /nfs_srv/upload
+    mode: '755'
+    owner: nobody
+    group: nogroup
+  export:
+    line: "/nfs_srv/upload *(rw,sync,no_subtree_check,no_root_squash)"
+
+...
